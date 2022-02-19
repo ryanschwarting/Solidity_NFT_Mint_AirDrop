@@ -1,5 +1,7 @@
 # Solidity Assessment NFT Airdrop/Mint for Polygon Mainnet
 
+![alt=""](Images/Polygon.jpg)
+
 ## Screenshots of deployed contract on Remix
 
 ![alt=""](Images/Remix.png)
