@@ -9,8 +9,8 @@ contract assessment is ERC721Enumerable, Ownable {
 
     string public baseURI;
     string public baseExtension = ".json";
-    uint256 public cost = 1000000000000000000 wei;
-    uint256 public maxSupply = 1;
+    uint256 public cost = 1000000000000000000 wei; //matic is the same denomination as ether so I just set it to wei
+    uint256 public maxSupply = 10;                //for less confusion since it will be a polygon nft        
     uint256 public maxMintAmount = 1;
 
     constructor(
@@ -26,7 +26,7 @@ contract assessment is ERC721Enumerable, Ownable {
         return baseURI;
     }
     
-    // public
+    // public mint funciton 
     function mint(address _to, uint256 _mintAmount) public payable {
         uint256 supply = totalSupply();
         require(_mintAmount > 0);
@@ -38,7 +38,16 @@ contract assessment is ERC721Enumerable, Ownable {
         }
     }
 
-        function walletOfOwner(address _owner)
+    //Airdrop function enter token address, array of addresses for mass sending, and token id
+    function bulkAirdropERC721(IERC721 _token, address[] calldata _to, uint256[] calldata _id) public {
+        require(_to.length == _id.length, "Recievers and IDs are different length");
+        for (uint256 i = 0; i < _to.length; i++) {
+            _token.safeTransferFrom(msg.sender, _to[i], _id[i]);
+        }
+    }
+
+    
+    function walletOfOwner(address _owner)
         public
         view
         returns (uint256[] memory)
@@ -76,6 +85,7 @@ contract assessment is ERC721Enumerable, Ownable {
                 : "";
     }
 
+    //setter functions that only the owner can change if needed
     function setBaseURI(string memory _newBaseURI) public onlyOwner {
     baseURI = _newBaseURI;
   }
@@ -84,8 +94,8 @@ contract assessment is ERC721Enumerable, Ownable {
         onlyOwner {
             baseExtension = _newBaseExtension;
     }
-
-     function withdraw() public payable onlyOwner {
+    //withdraw function for the owner of the contract
+    function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
